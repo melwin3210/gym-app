@@ -1,4 +1,5 @@
 
+import Map from "@/components/Map";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -86,27 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mb-12">
-   <h2 className="text-2xl font-semibold mb-4 text-center">Find Us Here</h2>
-
-   {/* Clickable Map */}
-   <a
-     href="https://maps.app.goo.gl/ZJojffMRppzzawQv6"
-     target="_blank"
-     rel="noopener noreferrer"
-     className="block mx-auto rounded-md overflow-hidden shadow-md"
-     style={{ maxWidth: "600px" }}
-   >
-     <iframe
-       title="Gym Location"
-       src={`https://www.google.com/maps/embed/v1/place?key=${process.env.MAP_TOKEN}&q=Your+Gym+Address`}
-       width="100%"
-       height="400"
-       style={{ border: 0, pointerEvents: "none" }} // Prevent interaction with the embedded map
-       loading="lazy"
-     ></iframe>
-   </a>
- </section>
+      <Map/>
 
       {/* Register Section */}
       <div className="text-center mt-8 animate__animated animate__fadeIn animate__delay-5s">
