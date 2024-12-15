@@ -16,7 +16,7 @@ const Map = () => {
    >
      <iframe
        title="Gym Location"
-       src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBVUUrvSH2ktSR8wtLevFGLLwXb3QOIPKc&q=Your+Gym+Address`}
+       src=''
        width="100%"
        height="400"
        style={{ border: 0, pointerEvents: "none" }} // Prevent interaction with the embedded map
