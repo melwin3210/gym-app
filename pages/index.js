@@ -1,9 +1,15 @@
 
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
+    <>
+    {/* <Head>
+      <title>Gym App</title>
+      <meta name="description" content="welcome to gym app"></meta>
+    </Head> */}
     <main className="p-8 bg-gradient-to-r from-red-600 to-black min-h-screen text-white">
       <h1 className="text-4xl font-extrabold text-center mb-8 animate__animated animate__fadeInUp">Welcome to Our Gym</h1>
 
@@ -117,6 +123,7 @@ export default function Home() {
         <p>&copy; 2024 Gym Name. All rights reserved.</p>
       </footer>
     </main>
+    </>
   );
 }
 
