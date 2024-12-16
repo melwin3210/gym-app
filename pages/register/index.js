@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import 'animate.css'
 import { useRouter } from "next/router";
+import MobileNumberValidation from "@/components/MobileNumberValidation";
 
 export default function Register() {
   const router = useRouter()
@@ -156,6 +157,7 @@ export default function Register() {
               )}
             </div>
           ))}
+          <MobileNumberValidation/>
 
           {/* Age and Gender in same row */}
           <div className="mb-4 flex space-x-4">
