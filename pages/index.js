@@ -1,52 +1,18 @@
 
+import GymPhotos from "@/components/GymPhotos";
 import Map from "@/components/Map";
-import Head from "next/head";
-import Image from "next/image";
+
 import Link from "next/link";
 
 export default function Home() {
   return (
     <>
-    {/* <Head>
-      <title>Gym App</title>
-      <meta name="description" content="welcome to gym app"></meta>
-    </Head> */}
     <main className="p-8 bg-gradient-to-r from-red-600 to-black min-h-screen text-white">
       <h1 className="text-4xl font-extrabold text-center mb-8 animate__animated animate__fadeInUp">Welcome to Our Gym</h1>
 
       {/* Gym Photos Section */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-semibold mb-6 text-center text-red-400 animate__animated animate__fadeIn animate__delay-1s">Explore Our Gym</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="transition-transform transform hover:scale-105 hover:shadow-xl animate__animated animate__fadeIn animate__delay-2s">
-            <Image
-              src="/gym1.jpg"
-              alt="Gym Image 1"
-              width={400}
-              height={300}
-              className="rounded-lg shadow-lg"
-            />
-          </div>
-          <div className="transition-transform transform hover:scale-105 hover:shadow-xl animate__animated animate__fadeIn animate__delay-3s">
-            <Image
-              src="/gym2.jpg"
-              alt="Gym Image 2"
-              width={400}
-              height={300}
-              className="rounded-lg shadow-lg"
-            />
-          </div>
-          <div className="transition-transform transform hover:scale-105 hover:shadow-xl animate__animated animate__fadeIn animate__delay-4s">
-            <Image
-              src="/gym3.jpg"
-              alt="Gym Image 3"
-              width={400}
-              height={300}
-              className="rounded-lg shadow-lg"
-            />
-          </div>
-        </div>
-      </section>
+      <GymPhotos/>
+      
 
       {/* Membership Plans Section */}
       <section className="mb-12">
