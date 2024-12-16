@@ -1,11 +1,9 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useRef } from "react";
+import 'animate.css'
+import { useRouter } from "next/router";
 
 export default function Register() {
-  const router = useRouter();
-
-  // Form State
+  const router = useRouter()
   const [formData, setFormData] = useState({
     fullName: "",
     address: "",
@@ -15,23 +13,68 @@ export default function Register() {
     weight: "",
   });
 
-  const [loading, setLoading] = useState(false); // Loading state
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
-  const [notificationType, setNotificationType] = useState("success");
+  const [errors, setErrors] = useState({
+    fullName: "",
+    address: "",
+    age: "",
+    gender: "",
+    height: "",
+    weight: "",
+  });
 
-  // Handle form input change
+  const inputRefs = {
+    fullName: useRef(null),
+    address: useRef(null),
+    age: useRef(null),
+    gender: useRef(null),
+    height: useRef(null),
+    weight: useRef(null),
+  };
+
+  // Handle input change and validate on change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
+
+  // Validate a specific field and update error message
+  const validateField = (name, value) => {
+    let errorMessage = "";
+
+    if (!value.trim()) {
+      errorMessage = `${name.charAt(0).toUpperCase() + name.slice(1)} is required.`;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
+    const inputRef = inputRefs[name].current;
+
+    if (errorMessage) {
+      inputRef.classList.add("border-red-500");
+      inputRef.classList.remove("border-green-500");
+    } else {
+      inputRef.classList.add("border-green-500");
+      inputRef.classList.remove("border-red-500");
+    }
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    let formValid = true;
 
-    setLoading(true); // Set loading to true
-    setNotificationMessage(""); // Clear previous notifications
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key].trim()) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [key]: `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`,
+        }));
+        formValid = false;
+      }
+    });
+
+    if (formValid) {
+     
 
     try {
       const response = await fetch("/api/register", {
@@ -48,13 +91,33 @@ export default function Register() {
         throw new Error(data.message || "Registration failed");
       }
     } catch (error) {
-      setNotificationMessage("Registration failed. Please try again.");
-      setNotificationType("error");
-      setShowNotification(true);
+      
       console.error(error);
-    } finally {
-      setLoading(false); // Reset loading state
+    } 
     }
+  };
+
+  // Focus event to hide the error message when user starts typing
+  const handleFocus = (e) => {
+    const { name } = e.target;
+
+    // Clear error message on focus
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+
+    // Remove any border colors when focused
+    e.target.classList.remove("border-red-500");
+    e.target.classList.remove("border-green-500");
+  };
+
+  // Blur event to show error message if field is empty
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+
+    // Validate field and show error if empty
+    validateField(name, value);
   };
 
   return (
@@ -63,23 +126,12 @@ export default function Register() {
         Register for Membership
       </h1>
 
-      {/* Notification */}
-      {showNotification && (
-        <div
-          className={`fixed top-0 left-1/2 transform -translate-x-1/2 p-4 mt-4 rounded-lg shadow-lg transition-all duration-300 z-50 ${
-            notificationType === "success" ? "bg-green-500" : "bg-red-500"
-          } text-white`}
-        >
-          {notificationMessage}
-        </div>
-      )}
-
       <section className="mb-12">
         <h2 className="text-3xl font-semibold mb-6 text-center text-red-400 animate__animated animate__fadeIn animate__delay-1s">
           Join Our Gym
         </h2>
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-black rounded-lg shadow-lg">
-          {["fullName", "address", "age", "gender", "height", "weight"].map((field) => (
+          {["fullName", "address"].map((field) => (
             <div className="mb-4" key={field}>
               <label className="block text-xl font-semibold" htmlFor={field}>
                 {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -91,21 +143,129 @@ export default function Register() {
                 type={field === "age" || field === "height" || field === "weight" ? "number" : "text"}
                 value={formData[field] || ""}
                 onChange={handleChange}
+                ref={inputRefs[field]}
                 required
-                className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg"
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
               />
+              {errors[field] && (
+                <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
+                  {errors[field]}
+                </p>
+              )}
             </div>
           ))}
+
+          {/* Age and Gender in same row */}
+          <div className="mb-4 flex space-x-4">
+            <div className="w-1/2">
+              <label className="block text-xl font-semibold" htmlFor="age">
+                Age
+              </label>
+              <input
+                id="age"
+                name="age"
+                type="number"
+                value={formData.age || ""}
+                onChange={handleChange}
+                ref={inputRefs.age}
+                required
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
+                maxLength={3}
+              />
+              {errors.age && (
+                <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
+                  {errors.age}
+                </p>
+              )}
+            </div>
+            <div className="w-1/2">
+              <label className="block text-xl font-semibold" htmlFor="gender">
+                Gender
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                value={formData.gender || ""}
+                onChange={handleChange}
+                ref={inputRefs.gender}
+                required
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              {errors.gender && (
+                <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
+                  {errors.gender}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Height and Weight in same row */}
+          <div className="mb-4 flex space-x-4">
+            <div className="w-1/2">
+              <label className="block text-xl font-semibold" htmlFor="height">
+                Height (cm)
+              </label>
+              <input
+                id="height"
+                name="height"
+                type="number"
+                value={formData.height || ""}
+                onChange={handleChange}
+                ref={inputRefs.height}
+                required
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
+                maxLength={3}
+              />
+              {errors.height && (
+                <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
+                  {errors.height}
+                </p>
+              )}
+            </div>
+            <div className="w-1/2">
+              <label className="block text-xl font-semibold" htmlFor="weight">
+                Weight (kg)
+              </label>
+              <input
+                id="weight"
+                name="weight"
+                type="number"
+                value={formData.weight || ""}
+                onChange={handleChange}
+                ref={inputRefs.weight}
+                onBlur={handleBlur}
+                required
+                onFocus={handleFocus}
+                className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
+                maxLength={3}
+              />
+              {errors.weight && (
+                <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
+                  {errors.weight}
+                </p>
+              )}
+            </div>
+          </div>
 
           <div className="text-center">
             <button
               type="submit"
-              disabled={loading} // Disable while loading
-              className={`${
-                loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
-              } text-white py-3 px-6 rounded text-lg transition-all duration-300`}
+              className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded text-lg transition-all duration-300"
             >
-              {loading ? "In Progress..." : "Register"}
+              Register
             </button>
           </div>
         </form>
