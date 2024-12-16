@@ -1,13 +1,14 @@
 
 import GymPhotos from "@/components/GymPhotos";
 import Map from "@/components/Map";
+import TimingSection from "@/components/TimingSection";
 
 import Link from "next/link";
 
 export default function Home() {
   return (
     <>
-    <main className="p-8 bg-gradient-to-r from-red-600 to-black min-h-screen text-white">
+    <main className="p-8 pt-20 bg-gradient-to-r from-red-600 to-black min-h-screen text-white">
       <h1 className="text-4xl font-extrabold text-center mb-8 animate__animated animate__fadeInUp">Welcome to Our Gym</h1>
 
       {/* Gym Photos Section */}
@@ -52,6 +53,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <TimingSection/>
 
       <Map/>
 

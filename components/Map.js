@@ -4,7 +4,7 @@ const Map = () => {
   return (
     <div>
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Find Us Here</h2>
+      <h2 className="text-3xl font-semibold mb-6 text-center text-red-400 animate__animated animate__fadeIn animate__delay-1s">Find Us Here</h2>
 
         {/* Clickable Map */}
         <a
