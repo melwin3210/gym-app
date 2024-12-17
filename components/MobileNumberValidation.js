@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/firebase";
 import Button from "./UI/Button";
@@ -14,7 +13,6 @@ export default function Register({
   handleFocus,
   validateField
 }) {
-  const router = useRouter();
 
   const [countryCode, setCountryCode] = useState("+91"); // Default to India
   const [mobileNumber, setMobileNumber] = useState("");
@@ -42,7 +40,6 @@ export default function Register({
   }, []);
   
 
-  //isOtpSent && isVerified && validateField("otp", "verified")
 
   // Handle Sending OTP
   const handleSendOtp = async () => {
@@ -73,13 +70,14 @@ export default function Register({
     setIsOtpSent(false);
     setMobileNumber(e.target.value);
     setErrorMessage("");
-    handleChange(e);
+    handleChange(e, isVerified);
   };
   const otpVerify = (e) => {
     setOtp(e.target.value)
-    
-
+    handleChange(e);
+    setErrorMessage("");
   }
+
 
   // Handle OTP Verification
   const handleVerifyOtp = async () => {
@@ -173,6 +171,7 @@ export default function Register({
                 ref={otpRef}
                   type="text"
                   value={otp}
+                  onBlur={onBlur}
                   handleFocus = {handleFocus}
                   onChange={(e) => otpVerify(e)}
                   placeholder="Enter OTP"
@@ -194,18 +193,12 @@ export default function Register({
           )}
         </>
       )}
-      {otpError &&  (
-            <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
-              {otpError}
-            </p>
-          )}
+     {((otpError ) || errorMessage) && (
+  <p className="text-red-500 mt-2 animate__animated animate__fadeIn animate__delay-1s">
+    {otpError || errorMessage}
+  </p>
+)}
 
-      {/* Error Message */}
-      {errorMessage && (
-        <p className="mt-4 text-center text-red-500 font-medium">
-          {errorMessage}
-        </p>
-      )}
     </div>
   );
 }

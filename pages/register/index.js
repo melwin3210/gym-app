@@ -13,7 +13,7 @@ export default function Register() {
     height: "",
     weight: "",
     number: "",
-    otp:""
+    otp: ""
   });
 
   const [errors, setErrors] = useState({
@@ -40,11 +40,6 @@ export default function Register() {
 
   // Handle input change and validate on change
   const handleChange = (e) => {
-    // if(e === 'otp verified'){
-    //   setFormData((prev) => ({ ...prev, ["otp"]: "verified" }))
-    //   validateField('otp', "verified");
-    //   return;
-    // }
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     validateField(name, value);
@@ -53,8 +48,12 @@ export default function Register() {
   // Validate a specific field and update error message
   const validateField = (name, value) => {
     let errorMessage = "";
+    if(name === 'otp' && value === 'verified'){
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
+      setFormData((prev) => ({ ...prev, ['otp']: 'verified' }));
+    }
 
-    if (!value.trim()) {
+    if (!value.trim() || (name === 'otp' && (value != 'verified' && value.length <= 1)) ) {
       errorMessage = `${name.charAt(0).toUpperCase() + name.slice(1)} is required.`;
     }
 
@@ -77,11 +76,19 @@ export default function Register() {
     let formValid = true;
 
     Object.keys(formData).forEach((key) => {
-      if (key === "otp" && !formData.number.trim()) return;
+      //if (key === "otp" && !formData.number.trim()) return;
+      
       if (!formData[key].trim()) {
         setErrors((prevErrors) => ({
           ...prevErrors,
           [key]: `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`,
+        }));
+        formValid = false;
+      }
+      if (formData['otp'] != 'verified') {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ['otp']: `Verify OTP.`,
         }));
         formValid = false;
       }
