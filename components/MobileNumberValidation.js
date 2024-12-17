@@ -100,11 +100,6 @@ export default function Register({
       setErrorMessage("Invalid OTP. Please try again.");
     }
   };
-  // if(!mobileNumber){
-  //   debugger
-  //   validateField("otp", "required message remove")
-
-  // }
 
   return (
     <div className="my-3">
