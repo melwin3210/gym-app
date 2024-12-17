@@ -12,6 +12,8 @@ export default function Register() {
     gender: "",
     height: "",
     weight: "",
+    number: "",
+    otp:""
   });
 
   const [errors, setErrors] = useState({
@@ -21,6 +23,8 @@ export default function Register() {
     gender: "",
     height: "",
     weight: "",
+    number:"",
+    otp:""
   });
 
   const inputRefs = {
@@ -30,10 +34,17 @@ export default function Register() {
     gender: useRef(null),
     height: useRef(null),
     weight: useRef(null),
+    number: useRef(null),
+    otp: useRef(null)
   };
 
   // Handle input change and validate on change
   const handleChange = (e) => {
+    // if(e === 'otp verified'){
+    //   setFormData((prev) => ({ ...prev, ["otp"]: "verified" }))
+    //   validateField('otp', "verified");
+    //   return;
+    // }
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     validateField(name, value);
@@ -48,14 +59,15 @@ export default function Register() {
     }
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
-    const inputRef = inputRefs[name].current;
+    
+    const inputRef = inputRefs[name]?.current;
 
     if (errorMessage) {
-      inputRef.classList.add("border-red-500");
-      inputRef.classList.remove("border-green-500");
+      inputRef?.classList.add("border-red-500");
+      inputRef?.classList.remove("border-green-500");
     } else {
-      inputRef.classList.add("border-green-500");
-      inputRef.classList.remove("border-red-500");
+      inputRef?.classList.add("border-green-500");
+      inputRef?.classList.remove("border-red-500");
     }
   };
 
@@ -65,6 +77,7 @@ export default function Register() {
     let formValid = true;
 
     Object.keys(formData).forEach((key) => {
+      if (key === "otp" && !formData.number.trim()) return;
       if (!formData[key].trim()) {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -145,7 +158,7 @@ export default function Register() {
                 value={formData[field] || ""}
                 onChange={handleChange}
                 ref={inputRefs[field]}
-                required
+                
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
@@ -157,7 +170,8 @@ export default function Register() {
               )}
             </div>
           ))}
-          <MobileNumberValidation/>
+          <MobileNumberValidation  handleChange={handleChange}  ref={inputRefs.number} otpRef={inputRefs.otp} onBlur={handleBlur}
+               handleFocus={handleFocus} onFocus={handleFocus} error={errors.number} otpError = {errors.otp} validateField= {validateField} />
 
           {/* Age and Gender in same row */}
           <div className="mb-4 flex space-x-4">
@@ -172,7 +186,6 @@ export default function Register() {
                 value={formData.age || ""}
                 onChange={handleChange}
                 ref={inputRefs.age}
-                required
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
@@ -194,7 +207,7 @@ export default function Register() {
                 value={formData.gender || ""}
                 onChange={handleChange}
                 ref={inputRefs.gender}
-                required
+                
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
@@ -225,7 +238,7 @@ export default function Register() {
                 value={formData.height || ""}
                 onChange={handleChange}
                 ref={inputRefs.height}
-                required
+                
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
@@ -249,7 +262,7 @@ export default function Register() {
                 onChange={handleChange}
                 ref={inputRefs.weight}
                 onBlur={handleBlur}
-                required
+                
                 onFocus={handleFocus}
                 className="w-full p-3 mt-2 bg-gray-700 text-white rounded-lg transition-all duration-300"
                 maxLength={3}
