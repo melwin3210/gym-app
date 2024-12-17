@@ -82,10 +82,11 @@ export default function Register() {
         setErrors((prevErrors) => ({
           ...prevErrors,
           [key]: `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`,
+          ['otp']:''
         }));
         formValid = false;
       }
-      if (formData['otp'] != 'verified') {
+      if (formData['otp'] != 'verified' && formData['number']) {
         setErrors((prevErrors) => ({
           ...prevErrors,
           ['otp']: `Verify OTP.`,
