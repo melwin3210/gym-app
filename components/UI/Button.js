@@ -2,14 +2,14 @@
 
 import React, {  useState } from "react";
 
-const Button = ({ children, handleSendOtp }) => {
+const Button = ({ children, onClickHandler }) => {
   const [isProcessing, setIsProcessing] = useState(false); // Local processing state
 
   const handleClick = async () => {
     setIsProcessing(true);
 
     try {
-      await handleSendOtp(); // Call the async handler
+      await  onClickHandler(); // Call the async handler
     } finally {
       setIsProcessing(false);
     }
@@ -26,7 +26,7 @@ const Button = ({ children, handleSendOtp }) => {
           : "bg-red-600 hover:bg-red-700"
       } text-white py-3 rounded-lg text-lg transition-all duration-300`}
     >
-      {isProcessing ? "Sending OTP..." : children}
+      {isProcessing ? "Processing.." : children}
     </button>
   );
 };

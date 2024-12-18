@@ -5,6 +5,7 @@ import MobileNumberValidation from "@/components/MobileNumberValidation";
 
 export default function Register() {
   const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const [formData, setFormData] = useState({
     fullName: "",
     address: "",
@@ -53,7 +54,10 @@ export default function Register() {
       setFormData((prev) => ({ ...prev, ['otp']: 'verified' }));
     }
 
-    if (!value.trim() || (name === 'otp' && (value != 'verified' && value.length <= 1)) ) {
+    if (!value.trim()) {
+      errorMessage = `${name.charAt(0).toUpperCase() + name.slice(1)} is required.`;
+    }
+    if (value.number && value.otp != 'verified') {
       errorMessage = `${name.charAt(0).toUpperCase() + name.slice(1)} is required.`;
     }
 
@@ -84,6 +88,8 @@ export default function Register() {
           [key]: `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`,
           ['otp']:''
         }));
+        console.log(errors);
+        
         formValid = false;
       }
       if (formData['otp'] != 'verified' && formData['number']) {
@@ -99,6 +105,7 @@ export default function Register() {
      
 
     try {
+      setIsSubmitting(true)
       const response = await fetch("/api/register", {
         method: "POST",
         body: JSON.stringify(formData),
@@ -106,8 +113,10 @@ export default function Register() {
       });
 
       const data = await response.json();
+      setIsSubmitting(false)
 
       if (response.ok) {
+        
         router.push("/registration-successful"); // Redirect on success
       } else {
         throw new Error(data.message || "Registration failed");
@@ -115,6 +124,7 @@ export default function Register() {
     } catch (error) {
       
       console.error(error);
+      setIsSubmitting(false)
     } 
     }
   };
@@ -179,7 +189,7 @@ export default function Register() {
             </div>
           ))}
           <MobileNumberValidation  handleChange={handleChange}  ref={inputRefs.number} otpRef={inputRefs.otp} onBlur={handleBlur}
-               handleFocus={handleFocus} onFocus={handleFocus} error={errors.number} otpError = {errors.otp} validateField= {validateField} />
+               handleFocus={handleFocus} error={errors.number} otpError = {errors.otp} validateField= {validateField} />
 
           {/* Age and Gender in same row */}
           <div className="mb-4 flex space-x-4">
@@ -284,12 +294,15 @@ export default function Register() {
           </div>
 
           <div className="text-center">
-            <button
-              type="submit"
-              className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded text-lg transition-all duration-300"
-            >
-              Register
-            </button>
+          <button
+            type="submit"
+            className={`bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded text-lg transition-all duration-300 ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Registering..." : "Register"}
+          </button>
           </div>
         </form>
       </section>
