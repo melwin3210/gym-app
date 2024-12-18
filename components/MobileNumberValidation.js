@@ -70,7 +70,7 @@ export default function Register({
     setIsOtpSent(false);
     setMobileNumber(e.target.value);
     setErrorMessage("");
-    handleChange(e, isVerified);
+    handleChange(e);
   };
   const otpVerify = (e) => {
     setOtp(e.target.value)
@@ -94,6 +94,7 @@ export default function Register({
       setErrorMessage("");
       validateField("otp", "verified")
     } catch (error) {
+      debugger
       console.error("Error verifying OTP:", error);
       setErrorMessage("Invalid OTP. Please try again.");
     }
@@ -157,7 +158,7 @@ export default function Register({
         <>
           {!isOtpSent ? (
             <Button
-              handleSendOtp={handleSendOtp}
+            onClickHandler={handleSendOtp}
               className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg text-lg transition-all duration-300"
             >
               Send OTP
@@ -180,13 +181,8 @@ export default function Register({
               </div>
 
               {/* Verify Button */}
-              <button
-                type="button"
-                onClick={handleVerifyOtp}
-                className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg text-lg transition-all duration-300"
-              >
-                Verify OTP
-              </button>
+              <Button onClickHandler={handleVerifyOtp} className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg text-lg transition-all duration-300"
+              >Verify OTP</Button>
              
             </div>
             
